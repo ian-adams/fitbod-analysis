@@ -5,12 +5,14 @@ date: "5/9/2022"
 output: html_document
 ---
 
-```{r remedy001}
+```{r remedy001, message=FALSE, warning=FALSE, include=FALSE}
 
 library(tidyverse)
 library(ggplot2)
 library(readr)
 library(here)
+library(ggstatsplot)
+library(lubridate)
 
 ```
 
@@ -20,6 +22,53 @@ Import cleaned data
 
 ```{r remedy002}
 
-df <- read_rds()
+df <- read_rds(here("data","clean","df_clean.rds"))
+
 
 ```
+
+
+## plots
+
+```{r remedy003}
+
+## barbell bench press
+
+chest <- df %>% filter(exercise_bucket == "Chest") %>% filter(is_warmup== "FALSE")
+
+## Just to see total weight by set?
+chest %>% 
+  mutate(date_col = date(date_time)) %>%
+  group_by(date_col) %>%
+  summarize(value = sum(set_wt))
+
+## basic plot
+ggplot(chest) +
+  aes(x = date_time, y = set_wt) +
+  geom_point(shape = "circle", size = 1.5, colour = "#112446") +
+  stat_smooth(method = "lm",
+              formula = y ~ x,
+              geom = "smooth") +
+  theme_minimal()
+
+
+## fancy ggstatsplot version
+## for reproducibility
+set.seed(7146)
+
+ggscatterstats(
+  data = chest,
+  x = date_time,
+  y = set_wt,
+  xlab = "Date",
+  ylab = "Volume per Set",
+  title = "Set Volume (Chest) Over Time"
+)
+
+
+
+```
+
+
+
+
