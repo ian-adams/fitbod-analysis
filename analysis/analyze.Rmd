@@ -1,0 +1,25 @@
+---
+title: "analyze"
+author: "Ian Adams"
+date: "5/9/2022"
+output: html_document
+---
+
+```{r remedy001}
+
+library(tidyverse)
+library(ggplot2)
+library(readr)
+library(here)
+
+```
+
+## Get Data
+
+Import cleaned data
+
+```{r remedy002}
+
+df <- read_rds()
+
+```

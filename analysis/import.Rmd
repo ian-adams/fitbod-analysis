@@ -1,0 +1,47 @@
+---
+title: "import"
+author: "Ian Adams"
+date: "5/9/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(here)
+library(readr)
+library(lubridate)
+
+here("C:/Users/adams/R/Fitbod")
+```
+
+
+## import
+
+```{r remedy001}
+
+df <- read_csv(here("data", "raw", "WorkoutExport.csv")) %>% janitor::clean_names()
+
+df <- df %>% mutate(weight_lb = round(2.2046*weight_kg, digits = 0)) # convert kg to lb, round to whole number
+
+## date wrangling
+
+
+
+df$hour <- hour(df$date)
+df$day <- day(df$date)
+df$weekday <- wday(df$date, label = TRUE)
+df$month <- month(df$date, label = TRUE)
+df$year <- year(df$date)
+
+```
+## export
+
+```{r remedy002}
+
+write_rds(df, file = here("data", "clean", "df_clean.rds"))
+
+write_csv(df, file = here("data", "clean", "df_clean.csv"))
+
+```
